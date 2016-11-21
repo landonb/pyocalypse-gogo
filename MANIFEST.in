@@ -4,6 +4,8 @@ include LICENSE.txt
 # Include the data files
 #recursive-include data *
 include pyocalypse_gogo/gogo-completion
+#include pyocalypse_gogo/gogo.sh
+#recursive-include pyocalypse_gogo *
 
 # If using Python 2.6 or less, then have to include package data, even though
 # it's already declared in setup.py

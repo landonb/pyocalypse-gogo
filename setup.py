@@ -96,9 +96,16 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
+    # NOTE: package_data only used when building binary packages.
+    #        http://stackoverflow.com/questions/7522250/
+    #         how-to-include-package-data-with-setuptools-distribute
     package_data={
         'pyocalypse_gogo': ['gogo.sh'],
     },
+
+#include_package_data=True,
+#packages=setuptools.find_packages(),
+#include_package_data=True, # use MANIFEST.in during install
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
