@@ -1,0 +1,39 @@
+# Bash tab completions for pyocalypse-gogo `gogo` command.
+#  vim:tw=0:ts=4:sw=4:et:ft=sh
+
+# USAGE:
+#   Set GOGO_CLIENT_DIR and type gogo<TAB> et voilà.
+
+_gogocompleter () {
+
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    length_terms=${#COMP_WORDS[@]}
+
+    if [[ -z ${GOGO_CLIENT_DIR} ]]; then
+        # Ooops! Not set up.
+        #GOGO_CLIENT_DIR="${HOME}"
+        return 0
+    fi
+
+    if [[ ${length_terms} == 2 ]] ; then 
+        local keys=$(/bin/ls ${GOGO_CLIENT_DIR})
+        COMPREPLY=( $(compgen -W "${keys}" -- ${cur}) )
+        return 0
+    elif [[ ${length_terms} == 3 ]] ; then
+        #local keys=$(/bin/ls -d ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]}/${COMP_WORDS[1]}-*)
+        #  find ${GOGO_CLIENT_DIR}/partner -name "partner-*" -type d -exec basename {} \;
+        local keys=$(find ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]} \
+            -name "${COMP_WORDS[1]}-*" \( -type d -o -type l \) \
+            -exec basename {} \;)
+        COMPREPLY=( $(compgen -W "${keys}" -- ${cur}) )
+        return 0
+    else
+        return 0
+    fi
+}
+
+complete -F _gogocompleter gogo
+
