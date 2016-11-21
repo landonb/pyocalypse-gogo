@@ -92,7 +92,7 @@ gogo () {
     SUBDIR=$2
 
     if [[ -z ${CLIENT} ]]; then
-        #echo "USAGE: gogo client subdir"
+        >&2 echo "USAGE: gogo client subdir"
         return 1
     fi
 
@@ -106,7 +106,7 @@ gogo () {
         if [[ ! -d ${TARGET_DIR} ]]; then
             TARGET_DIR="${CLIENT_DIR}/${SUBDIR}"
             if [[ ! -d ${TARGET_DIR} ]]; then
-                #echo "ERROR: Could not find ticket dir under: ${CLIENT_DIR}"
+                >&2 echo "ERROR: Could not find ticket dir under: ${CLIENT_DIR}"
                 return 1
             fi
         fi
@@ -116,7 +116,7 @@ gogo () {
     fi
 
     if [[ ! -d ${CLIENT_DIR} ]]; then
-        #echo "ERROR: Could not find client dir at: ${CLIENT_DIR}"
+        >&2 echo "ERROR: Could not find client dir at: ${CLIENT_DIR}"
         return 1
     fi
 
@@ -130,12 +130,13 @@ gogo () {
     invursive_find "${CLIENT_DIR}/.exoline"
     if [[ -f ${INVURSIVE_PATH} ]]; then
         if [[ ! -h ${HOME}/.exoline ]]; then
-            #echo "OOPS: You ~/.exoline is not a symlink. Not replacing."
-            :
+            >&2 echo "OOPS: You ~/.exoline is not a symlink. Not replacing."
         else
             /bin/ln -sf ${INVURSIVE_PATH} ${HOME}/.exoline
-            #echo "Installed project ~/.exoline symlink"
+            >&2 echo "Installed project ~/.exoline symlink"
         fi
+    else
+        >&2 echo "Skipping ~/.exoline symlink: no replacement found."
     fi
 
     pushd ${TARGET_DIR} &> /dev/null
