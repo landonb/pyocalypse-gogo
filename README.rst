@@ -8,3 +8,9 @@ Install with ``pip``::
 
     pip install git+https://github.com/landonb/pyocalypse-gogo
 
+Or clone and install locally::
+
+    git clone https://github.com/landonb/pyocalypse-gogo
+    cd pyocalypse-gogo
+    pip install -v --user -e .
+
