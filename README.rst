@@ -14,3 +14,8 @@ Or clone and install locally::
     cd pyocalypse-gogo
     pip install -v --user -e .
 
+.. The only other project called `gogo` that I could find.
+.. And it's a project switcher!
+..
+..   http://codersbuffet.blogspot.com/2010/09/announcing-gogo-bash-project-switcher.html
+
