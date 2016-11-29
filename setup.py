@@ -49,7 +49,6 @@ setup(
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
-# FIXME: What else?
 
         # Pick your license as you wish (should match "license" above)
         #'License :: OSI Approved :: MIT License',
@@ -102,10 +101,6 @@ setup(
     package_data={
         'pyocalypse_gogo': ['gogo.sh'],
     },
-
-#include_package_data=True,
-#packages=setuptools.find_packages(),
-#include_package_data=True, # use MANIFEST.in during install
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
