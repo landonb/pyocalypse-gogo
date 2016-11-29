@@ -124,16 +124,21 @@ gogo () {
     invursive_find "${CLIENT_DIR}/.bashrc-${CLIENT}"
     if [[ -f ${INVURSIVE_PATH} ]]; then
         source ${INVURSIVE_PATH}
+        echo "Sourced ${INVURSIVE_PATH}"
+    else
+        : # Meh.
+        #echo "No .bashrc under: "${CLIENT_DIR}/.bashrc-${CLIENT}""
+        #echo "or at: ${INVURSIVE_PATH}"
     fi
 
     # Rewire ~/.exoline for the project, maybe.
     invursive_find "${CLIENT_DIR}/.exoline"
     if [[ -f ${INVURSIVE_PATH} ]]; then
         if [[ ! -h ${HOME}/.exoline ]]; then
-            >&2 echo "OOPS: You ~/.exoline is not a symlink. Not replacing."
+            >&2 echo "OOPS: Your ~/.exoline is not a symlink. Not replacing."
         else
             /bin/ln -sf ${INVURSIVE_PATH} ${HOME}/.exoline
-            >&2 echo "Installed project ~/.exoline symlink"
+            >&2 echo "Symlinked ~/.exoline"
         fi
     else
         >&2 echo "Skipping ~/.exoline symlink: no replacement found."
@@ -141,8 +146,13 @@ gogo () {
 
     pushd ${TARGET_DIR} &> /dev/null
 
-    echo ${TARGET_DIR}
+    echo "Entered ${TARGET_DIR}"
 }
 
-gogo $*
+if [[ "$0" == "$BASH_SOURCE" ]]; then
+    # Only call gogo if this script is being run and not sourced.
+    # Ideally, you'll want to source the script and run gogo as
+    # a function so that the `source` command above sticks.
+    gogo $*
+fi
 
