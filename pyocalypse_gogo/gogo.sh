@@ -106,7 +106,7 @@ gogo () {
         if [[ ! -d ${TARGET_DIR} ]]; then
             TARGET_DIR="${CLIENT_DIR}/${SUBDIR}"
             if [[ ! -d ${TARGET_DIR} ]]; then
-                >&2 echo "ERROR: Could not find ticket dir under: ${CLIENT_DIR}"
+                >&2 echo "ERROR: Could not find ticket dir (${TARGET_DIR}) under: ${CLIENT_DIR}"
                 return 1
             fi
         fi
