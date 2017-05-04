@@ -140,11 +140,20 @@ gogo () {
         return 1
     fi
 
+    # 2017-05-03: Silly.
+    local font_normal_bash="\033[0m"
+    local font_bold_bash="\033[1m"
+    local HOTPINK="\033[38;5;198m"
+    local FOREST_BG="\\033[48;5;22m"
+    local LIME="\033[38;5;154m"
+
+    echo -e "${LIME}Preparing${font_normal_bash} ${target_dir}..."
+
     # Load a bashrc, maybe.
     invursive_find "${target_dir}/.bashrc-${client}"
     if [[ -f ${INVURSIVE_PATH} ]]; then
         source ${INVURSIVE_PATH}
-        echo "Sourced ${INVURSIVE_PATH}"
+        echo -e "- ${HOTPINK}Sourced${font_normal_bash} ${INVURSIVE_PATH}"
     else
         : # Meh.
         #echo "No .bashrc under: "${client_dir}/.bashrc-${client}""
@@ -185,7 +194,7 @@ gogo () {
 
     pushd ${target_dir} &> /dev/null
 
-    echo "Entered ${TARGET_DIR}"
+    echo -e "          ${font_bold_bash}${target_dir}${font_normal_bash} ${font_bold_bash}${FOREST_BG}is ready!${font_normal_bash}"
 }
 
 if [[ "$0" == "$BASH_SOURCE" ]]; then
