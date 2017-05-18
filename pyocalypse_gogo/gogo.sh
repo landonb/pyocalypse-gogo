@@ -184,7 +184,7 @@ gogo () {
         if { read -r ruby_vers < "${INVURSIVE_PATH}"; } 2>/dev/null; then
             if [[ -n "${ruby_vers}" ]]; then
                 chruby "${ruby_vers}"
-                >&2 echo -e "- ${HOTPINK}Patched${font_normal_bash} ${ruby_vers}"
+                >&2 echo -e "- ${HOTPINK}Patched${font_normal_bash} ${ruby_vers} [$(basename ${RUBY_ROOT})]"
             else
                 >&2 echo "WARNING: .ruby-version specified but empty"
             fi
