@@ -4,7 +4,22 @@
 # USAGE:
 #   Set GOGO_CLIENT_DIR and type gogo<TAB> et voilà.
 
+TIMEIT=false
+TIMEIT=true
+TIME_F='/tmp/gogo.debug'
+
+report_time () {
+    ! ${TIMEIT} && return
+    local time_n=$(date +%s.%N)
+    time_elapsed=$(echo "scale=2; ${time_n} - ${TIME_0}" | bc -l)
+    TIME_0=$(date +%s.%N)
+    echo "${1}: ${time_elapsed}" >> ${TIME_F}
+}
+
 _gogocompleter () {
+    TIME_0=$(date +%s.%N)
+    ${TIMEIT} && truncate -s 0 ${TIME_F}
+    ${TIMEIT} && echo "gogo started at: ${TIME_0}" >> ${TIME_F}
 
     local cur prev opts
     COMPREPLY=()
@@ -18,17 +33,27 @@ _gogocompleter () {
         return 0
     fi
 
+    report_time "setup took"
+
     if [[ ${length_terms} == 2 ]] ; then 
         local keys=$(/bin/ls ${GOGO_CLIENT_DIR})
+        report_time "len2: keys took"
         COMPREPLY=( $(compgen -W "${keys}" -- ${cur}) )
+        report_time "len2: compgen took"
         return 0
     elif [[ ${length_terms} == 3 ]] ; then
         #local keys=$(/bin/ls -d ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]}/${COMP_WORDS[1]}-*)
         #  find ${GOGO_CLIENT_DIR}/partner -name "partner-*" -type d -exec basename {} \;
+        # 2017-08-07: What gives? find command takes a few seconds sometimes...
         local keys=$(find ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]} \
             -name "${COMP_WORDS[1]}-*" \( -type d -o -type l \) \
             -exec basename {} \;)
+        ${TIMEIT} && echo "find ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]} \\
+            -name \"${COMP_WORDS[1]}-*\" \\( -type d -o -type l \\) \\
+            -exec basename {} \\;" >> ${TIME_F}
+        report_time "len3: keys took"
         COMPREPLY=( $(compgen -W "${keys}" -- ${cur}) )
+        report_time "len3: compgen took"
         return 0
     else
         return 0
