@@ -5,7 +5,7 @@
 #   Set GOGO_CLIENT_DIR and type gogo<TAB> et voilà.
 
 TIMEIT=false
-TIMEIT=true
+#TIMEIT=true
 TIME_F='/tmp/gogo.debug'
 
 report_time () {
@@ -45,10 +45,13 @@ _gogocompleter () {
         #local keys=$(/bin/ls -d ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]}/${COMP_WORDS[1]}-*)
         #  find ${GOGO_CLIENT_DIR}/partner -name "partner-*" -type d -exec basename {} \;
         # 2017-08-07: What gives? find command takes a few seconds sometimes...
+        # 2017-08-08: "Apparently some zidiot forgot the maxdepth operator!" [aw]
         local keys=$(find ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]} \
+            -maxdepth 1 \
             -name "${COMP_WORDS[1]}-*" \( -type d -o -type l \) \
             -exec basename {} \;)
         ${TIMEIT} && echo "find ${GOGO_CLIENT_DIR}/${COMP_WORDS[1]} \\
+            -maxdepth 1 \
             -name \"${COMP_WORDS[1]}-*\" \\( -type d -o -type l \\) \\
             -exec basename {} \\;" >> ${TIME_F}
         report_time "len3: keys took"
