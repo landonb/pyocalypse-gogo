@@ -38,8 +38,8 @@ invursive_find () {
         return 1
     fi
 
-    local filename=$(basename ${filepath})
-    local dirpath=$(dirname ${filepath})
+    local filename=$(basename -- "${filepath}")
+    local dirpath=$(dirname -- "${filepath}")
 
     # Deal only in full paths.
     # Symlinks okay (hence not pwd -P or readlink -f).
@@ -56,7 +56,7 @@ invursive_find () {
             INVURSIVE_PATH="${dirpath}/${filename}"
             break
         fi
-        dirpath=$(dirname ${dirpath})
+        dirpath=$(dirname -- "${dirpath}")
     done
 
     # Here's how chruby/auto.sh does the same:
@@ -130,7 +130,7 @@ gogo () {
                 return 1
             fi
         fi
-        client_dir=$(dirname ${target_dir})
+        client_dir=$(dirname -- "${target_dir}")
     else
         target_dir="${client_dir}"
     fi
@@ -184,7 +184,7 @@ gogo () {
         if { read -r ruby_vers < "${INVURSIVE_PATH}"; } 2>/dev/null; then
             if [[ -n "${ruby_vers}" ]]; then
                 chruby "${ruby_vers}"
-                >&2 echo -e "- ${HOTPINK}Patched${font_normal_bash} ${ruby_vers} [$(basename ${RUBY_ROOT})]"
+                >&2 echo -e "- ${HOTPINK}Patched${font_normal_bash} ${ruby_vers} [$(basename -- "${RUBY_ROOT}")]"
             else
                 >&2 echo "WARNING: .ruby-version specified but empty"
             fi
