@@ -141,19 +141,19 @@ gogo () {
     fi
 
     # 2017-05-03: Silly.
-    local font_normal_bash="\033[0m"
-    local font_bold_bash="\033[1m"
-    local HOTPINK="\033[38;5;198m"
-    local FOREST_BG="\\033[48;5;22m"
-    local LIME="\033[38;5;154m"
+    local FONT_NORMAL="\033[0m"
+    local FONT_BOLD="\033[1m"
+    local FG_HOTPINK="\033[38;5;198m"
+    local BG_FOREST="\\033[48;5;22m"
+    local FG_LIME="\033[38;5;154m"
 
-    echo -e "${LIME}Preparing${font_normal_bash} ${target_dir}..."
+    echo -e "${FG_LIME}Preparing${FONT_NORMAL} ${target_dir}..."
 
     # Load a bashrc, maybe.
     invursive_find "${target_dir}/.bashrc-${client}"
     if [[ -f ${INVURSIVE_PATH} ]]; then
         source ${INVURSIVE_PATH}
-        echo -e "- ${HOTPINK}Sourced${font_normal_bash} ${INVURSIVE_PATH}"
+        echo -e "- ${FG_HOTPINK}Sourced${FONT_NORMAL} ${INVURSIVE_PATH}"
     else
         : # Meh.
         #echo "No .bashrc under: "${client_dir}/.bashrc-${client}""
@@ -168,7 +168,7 @@ gogo () {
             >&2 echo "WHOA: Your ~/.exoline is not a symlink. Not replacing."
         else
             /bin/ln -sf ${INVURSIVE_PATH} ${HOME}/.exoline
-            >&2 echo -e "- ${HOTPINK}Symlnkd${font_normal_bash} ~/.exoline"
+            >&2 echo -e "- ${FG_HOTPINK}Symlnkd${FONT_NORMAL} ~/.exoline"
         fi
     #else
     #    >&2 echo "Skipping ~/.exoline symlink: no replacement found."
@@ -184,7 +184,7 @@ gogo () {
         if { read -r ruby_vers < "${INVURSIVE_PATH}"; } 2>/dev/null; then
             if [[ -n "${ruby_vers}" ]]; then
                 chruby "${ruby_vers}"
-                >&2 echo -e "- ${HOTPINK}Patched${font_normal_bash} ${ruby_vers} [$(basename -- "${RUBY_ROOT}")]"
+                >&2 echo -e "- ${FG_HOTPINK}Patched${FONT_NORMAL} ${ruby_vers} [$(basename -- "${RUBY_ROOT}")]"
             else
                 >&2 echo "WARNING: .ruby-version specified but empty"
             fi
@@ -194,7 +194,7 @@ gogo () {
 
     pushd ${target_dir} &> /dev/null
 
-    echo -e "          ${font_bold_bash}${target_dir}${font_normal_bash} ${font_bold_bash}${FOREST_BG}is ready!${font_normal_bash}"
+    echo -e "          ${FONT_BOLD}${target_dir}${FONT_NORMAL} ${FONT_BOLD}${BG_FOREST}is ready!${FONT_NORMAL}"
 }
 
 if [[ "$0" == "$BASH_SOURCE" ]]; then
