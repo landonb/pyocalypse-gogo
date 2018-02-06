@@ -28,47 +28,6 @@
 
 # -------------------------------------------------------------------------
 
-# Walk up the path looking for a file with the matching name.
-invursive_find () {
-
-    local filepath=$1
-
-    if [[ -z ${filepath} ]]; then
-        echo "ERROR: Please specify a file."
-        return 1
-    fi
-
-    local filename=$(basename -- "${filepath}")
-    local dirpath=$(dirname -- "${filepath}")
-
-    # Deal only in full paths.
-    # Symlinks okay (hence not pwd -P or readlink -f).
-    pushd ${dirpath} &> /dev/null
-    dirpath=$(pwd)
-    popd &> /dev/null
-
-    INVURSIVE_PATH=""
-    # We don't return things from file system root. Because safer?
-    while [[ ${dirpath} != '/' ]]; do
-        if [[ -f ${dirpath}/${filename} ]]; then
-            #echo "dirpath: ${dirpath}"
-            #echo "filename: ${filename}"
-            INVURSIVE_PATH="${dirpath}/${filename}"
-            break
-        fi
-        dirpath=$(dirname -- "${dirpath}")
-    done
-
-    # Here's how chruby/auto.sh does the same:
-    #   local dir="$PWD/"
-    #   until [[ -z "$dir" ]]; do
-    #       dir="${dir%/*}"
-    #       if ... fi
-    #   done
-
-    #echo "INVURSIVE_PATH: ${INVURSIVE_PATH}"
-}
-
 # HOW IT WORKS:
 #
 #   Suppose you have client code for a task under the directory,
@@ -105,6 +64,11 @@ invursive_find () {
 #       /company/clients/<client>/
 #
 #   that starts with <client>-.
+
+source_deps () {
+
+    source 'find_util.sh'
+}
 
 gogo () {
     local client=$1
@@ -150,38 +114,38 @@ gogo () {
     echo -e "${FG_LIME}Preparing${FONT_NORMAL} ${target_dir}..."
 
     # Load a bashrc, maybe.
-    invursive_find "${target_dir}/.bashrc-${client}"
-    if [[ -f ${INVURSIVE_PATH} ]]; then
-        source ${INVURSIVE_PATH}
-        echo -e "- ${FG_HOTPINK}Sourced${FONT_NORMAL} ${INVURSIVE_PATH}"
+    local invursive_path=$(invursive_find "${target_dir}/.bashrc-${client}")
+    if [[ -f ${invursive_path} ]]; then
+        source ${invursive_path}
+        echo -e "- ${FG_HOTPINK}Sourced${FONT_NORMAL} ${invursive_path}"
     else
         : # Meh.
         #echo "No .bashrc under: "${client_dir}/.bashrc-${client}""
-        #echo "or at: ${INVURSIVE_PATH}"
+        #echo "or at: ${invursive_path}"
     fi
-    unset INVURSIVE_PATH
+    unset invursive_path
 
     # Rewire ~/.exoline for the project, maybe.
-    invursive_find "${target_dir}/.exoline"
-    if [[ -f ${INVURSIVE_PATH} ]]; then
+    local invursive_path=$(invursive_find "${target_dir}/.exoline")
+    if [[ -f ${invursive_path} ]]; then
         if [[ ! -h ${HOME}/.exoline ]]; then
             >&2 echo "WHOA: Your ~/.exoline is not a symlink. Not replacing."
         else
-            /bin/ln -sf ${INVURSIVE_PATH} ${HOME}/.exoline
+            /bin/ln -sf ${invursive_path} ${HOME}/.exoline
             >&2 echo -e "- ${FG_HOTPINK}Symlnkd${FONT_NORMAL} ~/.exoline"
         fi
     #else
     #    >&2 echo "Skipping ~/.exoline symlink: no replacement found."
     fi
-    unset INVURSIVE_PATH
+    unset invursive_path
 
     # 2017-05-03: Party all the time.
     # E.g.,
     #   echo "ruby-2.3" > .ruby-version
-    invursive_find "${target_dir}/.ruby-version"
-    if [[ -f ${INVURSIVE_PATH} ]]; then
+    local invursive_path=$(invursive_find "${target_dir}/.ruby-version")
+    if [[ -f ${invursive_path} ]]; then
         local ruby_vers=""
-        if { read -r ruby_vers < "${INVURSIVE_PATH}"; } 2>/dev/null; then
+        if { read -r ruby_vers < "${invursive_path}"; } 2>/dev/null; then
             if [[ -n "${ruby_vers}" ]]; then
                 chruby "${ruby_vers}"
                 >&2 echo -e "- ${FG_HOTPINK}Patched${FONT_NORMAL} ${ruby_vers} [$(basename -- "${RUBY_ROOT}")]"
@@ -190,7 +154,7 @@ gogo () {
             fi
         fi
     fi
-    unset INVURSIVE_PATH
+    unset invursive_path
 
     pushd ${target_dir} &> /dev/null
 
@@ -198,6 +162,7 @@ gogo () {
 }
 
 if [[ "$0" == "$BASH_SOURCE" ]]; then
+    source_deps
     # Only call gogo if this script is being run and not sourced.
     # Ideally, you'll want to source the script and run gogo as
     # a function so that the `source` command above sticks.
