@@ -66,8 +66,11 @@
 #   that starts with <client>-.
 
 source_deps () {
-
-    source 'fries-findup'
+    source 'fries-findup' || \
+        ( \
+            echo "Missing dependency: github.com/landonb/fries-findup" \
+            && return 1 \
+        )
 }
 
 gogo () {
@@ -162,10 +165,12 @@ gogo () {
 }
 
 if [[ "$0" == "$BASH_SOURCE" ]]; then
-    source_deps
+    source_deps || exit
     # Only call gogo if this script is being run and not sourced.
     # Ideally, you'll want to source the script and run gogo as
     # a function so that the `source` command above sticks.
     gogo $*
+else
+    source_deps || return
 fi
 
