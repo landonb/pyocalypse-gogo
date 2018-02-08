@@ -67,7 +67,7 @@
 
 source_deps () {
 
-    source 'find_util.sh'
+    source 'fries-findup'
 }
 
 gogo () {
@@ -114,7 +114,7 @@ gogo () {
     echo -e "${FG_LIME}Preparing${FONT_NORMAL} ${target_dir}..."
 
     # Load a bashrc, maybe.
-    local invursive_path=$(invursive_find "${target_dir}/.bashrc-${client}")
+    local invursive_path=$(fries-findup "${target_dir}/.bashrc-${client}")
     if [[ -f ${invursive_path} ]]; then
         source ${invursive_path}
         echo -e "- ${FG_HOTPINK}Sourced${FONT_NORMAL} ${invursive_path}"
@@ -126,7 +126,7 @@ gogo () {
     unset invursive_path
 
     # Rewire ~/.exoline for the project, maybe.
-    local invursive_path=$(invursive_find "${target_dir}/.exoline")
+    local invursive_path=$(fries-findup "${target_dir}/.exoline")
     if [[ -f ${invursive_path} ]]; then
         if [[ ! -h ${HOME}/.exoline ]]; then
             >&2 echo "WHOA: Your ~/.exoline is not a symlink. Not replacing."
@@ -142,7 +142,7 @@ gogo () {
     # 2017-05-03: Party all the time.
     # E.g.,
     #   echo "ruby-2.3" > .ruby-version
-    local invursive_path=$(invursive_find "${target_dir}/.ruby-version")
+    local invursive_path=$(fries-findup "${target_dir}/.ruby-version")
     if [[ -f ${invursive_path} ]]; then
         local ruby_vers=""
         if { read -r ruby_vers < "${invursive_path}"; } 2>/dev/null; then
