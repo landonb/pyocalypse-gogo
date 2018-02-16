@@ -160,6 +160,10 @@ gogo () {
     unset invursive_path
 
     pushd ${target_dir} &> /dev/null
+    # MAYBE/2018-02-15: Resolve symlinks in path.
+    # NOTE/2018-02-15: This resolves the final symlink, but not
+    # earlier ones in path... weird.
+    cd -P ${target_dir} &> /dev/null
 
     echo -e "          ${FONT_BOLD}${target_dir}${FONT_NORMAL} ${FONT_BOLD}${BG_FOREST}is ready!${FONT_NORMAL}"
 }
