@@ -159,11 +159,16 @@ gogo () {
     fi
     unset invursive_path
 
-    pushd ${target_dir} &> /dev/null
+    # Exclude rvm errors, which are >&6 redirected, for some reason;
+    #   rvm monkey patches both cd and pushd.
+    pushd ${target_dir} &> /dev/null 6>&1
     # MAYBE/2018-02-15: Resolve symlinks in path.
     # NOTE/2018-02-15: This resolves the final symlink, but not
     # earlier ones in path... weird.
-    cd -P ${target_dir} &> /dev/null
+    #cd -P ${target_dir} &> /dev/null
+    #cd -P ${target_dir} &> /dev/null 6>&1
+    # Maybe show errors, eh?
+    cd -P ${target_dir}
 
     echo -e "          ${FONT_BOLD}${target_dir}${FONT_NORMAL} ${FONT_BOLD}${BG_FOREST}is ready!${FONT_NORMAL}"
 }
