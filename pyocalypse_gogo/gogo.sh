@@ -177,6 +177,7 @@ gogo () {
     eval "
         ogog() {
             pushd ${target_dir} > /dev/null 6>&1
+            cd -P ${target_dir}
         }
     "
     export -f ogog
