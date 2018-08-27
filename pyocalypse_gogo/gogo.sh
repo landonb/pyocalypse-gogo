@@ -175,7 +175,7 @@ gogo () {
 
     # Make an easy way to get back home!
     eval "
-        ogog() {
+        ogog () {
             pushd ${target_dir} > /dev/null 6>&1
             cd -P ${target_dir}
         }
