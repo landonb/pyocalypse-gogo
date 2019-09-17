@@ -126,7 +126,7 @@ gogo () {
         #echo "No .bashrc under: "${client_dir}/.bashrc-${client}""
         #echo "or at: ${invursive_path}"
     fi
-    unset invursive_path
+    unset -v invursive_path
 
     # FIXME/2018-05-16: (lb): Remove this unrelated business logic!
     # Rewire ~/.exoline for the project, maybe.
@@ -141,7 +141,7 @@ gogo () {
     #else
     #    >&2 echo "Skipping ~/.exoline symlink: no replacement found."
     fi
-    unset invursive_path
+    unset -v invursive_path
 
     # 2017-05-03: Party all the time.
     # E.g.,
@@ -158,7 +158,7 @@ gogo () {
             fi
         fi
     fi
-    unset invursive_path
+    unset -v invursive_path
 
     # Exclude rvm errors, which are >&6 redirected, for some reason;
     #   rvm monkey patches both cd and pushd.
