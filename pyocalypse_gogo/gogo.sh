@@ -66,7 +66,7 @@
 #   that starts with <client>-.
 
 source_deps () {
-    source 'fries-findup' || \
+    . 'fries-findup' || \
         ( \
             echo "Missing dependency: github.com/landonb/fries-findup" \
             && return 1 \
@@ -119,7 +119,7 @@ gogo () {
     # Load a bashrc, maybe.
     local invursive_path=$(fries-findup "${target_dir}/.bashrc-${client}")
     if [[ -f ${invursive_path} ]]; then
-        source ${invursive_path}
+        . ${invursive_path}
         echo -e "- ${FG_HOTPINK}Sourced${FONT_NORMAL} ${invursive_path}"
     else
         : # Meh.
