@@ -8,16 +8,30 @@ TIMEIT=false
 #TIMEIT=true
 TIME_F='/tmp/gogo.debug'
 
+# FIXME/2020-08-26: Move home_fries_nanos_now to shared dependency.
+home_fries_nanos_now () {
+  if command -v gdate > /dev/null; then
+    # macOS (brew install coreutils).
+    gdate +%s.%N
+  elif date --version &> /dev/null; then
+    # Linux/GNU.
+    date +%s.%N
+  else
+    # macOS pre-coreutils.
+    python -c 'import time; print("{:.9f}".format(time.time()))'
+  fi
+}
+
 report_time () {
     ! ${TIMEIT} && return
-    local time_n=$(date +%s.%N)
+    local time_n=$(home_fries_nanos_now)
     time_elapsed=$(echo "scale=2; ${time_n} - ${TIME_0}" | bc -l)
-    TIME_0=$(date +%s.%N)
+    TIME_0=$(home_fries_nanos_now)
     echo "${1}: ${time_elapsed}" >> ${TIME_F}
 }
 
 _gogocompleter () {
-    TIME_0=$(date +%s.%N)
+    TIME_0=$(home_fries_nanos_now)
     ${TIMEIT} && truncate -s 0 ${TIME_F}
     ${TIMEIT} && echo "gogo started at: ${TIME_0}" >> ${TIME_F}
 
