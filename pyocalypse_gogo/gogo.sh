@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # One developer's take on a project switcher.
 #  vim:tw=0:ts=4:sw=4:et:ft=sh:
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # vim:tw=0:ts=2:sw=2:et:ft=sh:
 
 # Walk up the path looking for a file with the matching name.
