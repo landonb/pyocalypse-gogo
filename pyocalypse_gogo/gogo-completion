@@ -8,8 +8,12 @@ TIMEIT=false
 #TIMEIT=true
 TIME_F='/tmp/gogo.debug'
 
-# FIXME/2020-08-26: Move home_fries_nanos_now to shared dependency.
-home_fries_nanos_now () {
+# Note this function now available as an external dependency:
+#   https://github.com/landonb/sh-print-nanos-now#⏱️
+# Because I use it in lots of projects.
+# - But I don't use this project anymore, so not gonna bother
+#   updating it.
+print_nanos_now () {
   if command -v gdate > /dev/null 2>&1; then
     # macOS (brew install coreutils).
     gdate +%s.%N
@@ -24,14 +28,14 @@ home_fries_nanos_now () {
 
 report_time () {
     ! ${TIMEIT} && return
-    local time_n=$(home_fries_nanos_now)
+    local time_n=$(print_nanos_now)
     time_elapsed=$(echo "scale=2; ${time_n} - ${TIME_0}" | bc -l)
-    TIME_0=$(home_fries_nanos_now)
+    TIME_0=$(print_nanos_now)
     echo "${1}: ${time_elapsed}" >> ${TIME_F}
 }
 
 _gogocompleter () {
-    TIME_0=$(home_fries_nanos_now)
+    TIME_0=$(print_nanos_now)
     ${TIMEIT} && truncate -s 0 ${TIME_F}
     ${TIMEIT} && echo "gogo started at: ${TIME_0}" >> ${TIME_F}
 
