@@ -36,7 +36,7 @@ report_time () {
 
 _gogocompleter () {
     TIME_0=$(print_nanos_now)
-    ${TIMEIT} && truncate -s 0 ${TIME_F}
+    ${TIMEIT} && truncate -s 0 -- "${TIME_F}"
     ${TIMEIT} && echo "gogo started at: ${TIME_0}" >> ${TIME_F}
 
     local cur prev opts
