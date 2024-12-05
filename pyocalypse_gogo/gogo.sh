@@ -135,7 +135,7 @@ gogo () {
         if [[ ! -h ${HOME}/.exoline ]]; then
             >&2 echo "WHOA: Your ~/.exoline is not a symlink. Not replacing."
         else
-            /bin/ln -sf ${invursive_path} ${HOME}/.exoline
+            command ln -sf -- "${invursive_path}" "${HOME}/.exoline"
             >&2 echo -e "- ${FG_HOTPINK}Symlnkd${FONT_NORMAL} ~/.exoline"
         fi
     #else
